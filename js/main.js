@@ -5,6 +5,29 @@ var map
 var markers = []
 
 /**
+ * Register a Service Worker.
+ */
+
+ //make sure that Service Workers are supported.
+ if (navigator.serviceWorker) {
+  
+  navigator.serviceWorker
+      .register('js/sw.js')
+      .then(function (registration) {
+        // Registration was successful
+        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+      })
+      .catch(function (err) {
+        // registration failed 
+        console.log('ServiceWorker registration failed: ', err);
+      });
+}
+else {
+  console.log('Service Worker is not supported in this browser.');
+}
+
+
+/**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
 document.addEventListener('DOMContentLoaded', (event) => {
@@ -144,7 +167,7 @@ createRestaurantHTML = (restaurant) => {
   image.alt = "An image of the restaurant.";
   li.append(image);
 
-  const name = document.createElement('h1');
+  const name = document.createElement('h2');
   name.innerHTML = restaurant.name;
   li.append(name);
 
