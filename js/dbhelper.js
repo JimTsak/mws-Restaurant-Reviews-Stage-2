@@ -8,13 +8,39 @@ class DBHelper {
    * Change this to restaurants.json file location on your server.
    */
   static get DATABASE_URL() {
-    const port = 8000 // Change this to your server port
-    return `http://localhost:${port}/data/restaurants.json`;
+    const port = 1337 // 8000 Change this to your server port
+    /*return `http://localhost:${port}/data/restaurants.json`; */
+    console.log("I was here");
+    return `http://localhost:${port}/restaurants`;
   }
 
   /**
    * Fetch all restaurants.
    */
+
+  static fetchRestaurants(callback) {
+
+    fetch(DBHelper.DATABASE_URL)
+    .then(response => response.json())
+    .then(addRestaurants)
+    .catch(e => requestError(e, 'json'));
+
+
+    function addRestaurants(data){
+      const restaurants = data;
+      console.log(restaurants);
+      callback(null, restaurants);      
+    }
+
+    function requestError(e, part){
+      console.log(e);
+      const error = (`Request failed with error ${part}`);
+      callback(error, null);
+    }
+
+  }
+
+  /*
   static fetchRestaurants(callback) {
     let xhr = new XMLHttpRequest();
     xhr.open('GET', DBHelper.DATABASE_URL);
@@ -30,6 +56,7 @@ class DBHelper {
     };
     xhr.send();
   }
+  */
 
   /**
    * Fetch a restaurant by its ID.
@@ -150,7 +177,9 @@ class DBHelper {
    * Restaurant image URL.
    */
   static imageUrlForRestaurant(restaurant) {
-    return (`/img/${restaurant.photograph}`);
+    console.log("I was here2");
+    console.log(`/img/${restaurant.id}.jpg`);
+    return (`/img/${restaurant.id}.jpg`);
   }
 
   /**
