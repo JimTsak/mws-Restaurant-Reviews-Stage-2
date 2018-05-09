@@ -1,4 +1,4 @@
-var CACHE_NAME = 'cache-v1';
+var CACHE_NAME = 'cache-v2';
 var urlsToCache = [
   '/',
   'css/styles.css',
@@ -25,9 +25,9 @@ self.addEventListener('activate', function (event) {
               if(key !== CACHE_VERSION){
                   return caches.delete(keys[i]);
               }
-          }))
+          }));
       })
-  )
+  );
 });
 
 self.addEventListener('fetch', function(event) {
