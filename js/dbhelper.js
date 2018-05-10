@@ -1,6 +1,11 @@
 /**
  * Common database helper functions.
  */
+
+import * as idb from '/node_modules/idb/lib/idb.js';
+//import idb from 'idb';
+//importScripts('node_modules/idb/lib/idb.js');
+
 class DBHelper {
 
   /**
@@ -194,5 +199,45 @@ class DBHelper {
     );
     return marker;
   }
+
+
+  static registerServiceWorker() {
+    
+    //make sure that Service Workers are supported.
+    if (navigator.serviceWorker) {
+      
+      navigator.serviceWorker
+          .register('/sw.js')
+          .then(function (registration) {
+            // Registration was successful
+            console.log('ServiceWorker registration successful with scope: ', registration.scope);
+          })
+          .catch(function (err) {
+            // registration failed 
+            console.log('ServiceWorker registration failed: ', err);
+          });
+    }
+    else {
+
+      console.log('Service Worker is not supported in this browser.');
+    }
+  }
+
+  //IndexedDB Promised
+  static openDatabase() {
+    // If the browser doesn't support service worker,
+    // we don't care about having a database
+    if (!navigator.serviceWorker) {
+      return Promise.resolve();
+    }
+    console.log("Inside openDatabase");
+    return idb.open('wittr', 1, function(upgradeDb) {
+      var store = upgradeDb.createObjectStore('wittrs', {
+        keyPath: 'id'
+      });
+      store.createIndex('by-date', 'time');
+    });
+  }
+
 
 }
