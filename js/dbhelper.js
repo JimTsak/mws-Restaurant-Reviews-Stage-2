@@ -2,7 +2,8 @@
  * Common database helper functions.
  */
 
-import * as idb from '/node_modules/idb/lib/idb.js';
+import idb from 'idb';
+//import * as idb from '../node_modules/idb/lib/idb.js';
 //import idb from 'idb';
 //importScripts('node_modules/idb/lib/idb.js');
 
