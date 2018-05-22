@@ -1,3 +1,5 @@
+//import idb from 'idb';
+
 let restaurant;
 var map;
 
@@ -167,25 +169,3 @@ getParameterByName = (name, url) => {
     return '';
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 };
-
-/**
- * Register a Service Worker.
- */
-
- //make sure that Service Workers are supported.
- if (navigator.serviceWorker) {
-  
-  navigator.serviceWorker
-      .register('js/sw.js')
-      .then(function (registration) {
-        // Registration was successful
-        console.log('ServiceWorker registration successful with scope: ', registration.scope);
-      })
-      .catch(function (err) {
-        // registration failed 
-        console.log('ServiceWorker registration failed: ', err);
-      });
-}
-else {
-  console.log('Service Worker is not supported in this browser.');
-}

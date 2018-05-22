@@ -2,13 +2,7 @@
  * Common database helper functions.
  */
 
-import idb from 'idb';
-//import * as idb from '../node_modules/idb/lib/idb.js';
-//import idb from 'idb';
-//importScripts('node_modules/idb/lib/idb.js');
-
 class DBHelper {
-
   /**
    * Database URL.
    * Change this to restaurants.json file location on your server.
@@ -16,7 +10,7 @@ class DBHelper {
   static get DATABASE_URL() {
     const port = 1337; // 8000 Change this to your server port
     /*return `http://localhost:${port}/data/restaurants.json`; */
-    
+
     return `http://localhost:${port}/restaurants`;
   }
 
@@ -35,7 +29,8 @@ class DBHelper {
     function addRestaurants(data){
       const restaurants = data;
       console.log(restaurants);
-      callback(null, restaurants);      
+      DBHelper.writeDatabase(restaurants);
+      callback(null, restaurants);
     }
 
     function requestError(e, part){
@@ -183,7 +178,8 @@ class DBHelper {
    * Restaurant image URL.
    */
   static imageUrlForRestaurant(restaurant) {
-    console.log(`/img/${restaurant.id}.jpg`);
+    //console.log(`/img/${restaurant.id}.jpg`);
+
     return (`/img/${restaurant.id}.jpg`);
   }
 
@@ -203,10 +199,10 @@ class DBHelper {
 
 
   static registerServiceWorker() {
-    
+
     //make sure that Service Workers are supported.
     if (navigator.serviceWorker) {
-      
+
       navigator.serviceWorker
           .register('/sw.js')
           .then(function (registration) {
@@ -214,7 +210,7 @@ class DBHelper {
             console.log('ServiceWorker registration successful with scope: ', registration.scope);
           })
           .catch(function (err) {
-            // registration failed 
+            // registration failed
             console.log('ServiceWorker registration failed: ', err);
           });
     }
@@ -232,13 +228,60 @@ class DBHelper {
       return Promise.resolve();
     }
     console.log("Inside openDatabase");
-    return idb.open('wittr', 1, function(upgradeDb) {
-      var store = upgradeDb.createObjectStore('wittrs', {
-        keyPath: 'id'
-      });
-      store.createIndex('by-date', 'time');
+
+    var dbPromise = idb.open('restaurant', 1, upgradeDb => {
+
+    switch(upgradeDb.oldVersion) {
+    case 0:
+        var restaurantsStore =  upgradeDb.createObjectStore('restaurants', { keyPath: 'id' });
+       // console.log("db restaurant created!");
+      }
     });
+
+    return dbPromise;
+
+    // return idb.open('restaurant', 1, function(upgradeDb) {
+    //   var store = upgradeDb.createObjectStore('restauratns', {
+    //     keyPath: 'id'
+    //   });
+    //   store.createIndex('by-date', 'time');
+    // });
+
   }
 
+
+  static writeDatabase(data) {
+
+
+    console.log("Inside writeDatabase");
+
+    var restaurants = data
+
+    var dbPromise = this.openDatabase();
+
+    dbPromise.then(function(db){
+      if (!db) return;
+
+      const tx = db.transaction('restaurants', 'readwrite');
+      const restaurantsStore = tx.objectStore('restaurants');
+
+      restaurants.forEach(function(restaurant) {
+        restaurantsStore.put({id: restaurant.id, data: restaurant});
+      });
+
+    });
+
+  }
+
+  static getFromDatabase() {
+    console.log("Inside GETFromDatabase");
+
+    var dbPromise = this.openDatabase();
+
+    dbPromise.then(db => {
+      return db.transaction('restaurants').objectStore('restaurants').getAll();
+    }).then(allObjs => console.log(allObjs));
+
+  }
 
 }

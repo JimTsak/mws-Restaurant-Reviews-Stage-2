@@ -1,3 +1,5 @@
+//import idb from 'idb';
+
 let restaurants,neighborhoods, cuisines;
 var map;
 var markers = [];
@@ -12,6 +14,8 @@ DBHelper.registerServiceWorker();
 **/
 
 DBHelper.openDatabase();
+//DBHelper.getFromDatabase();
+
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
@@ -20,7 +24,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
   fetchNeighborhoods();
   fetchCuisines();
-  
+
 });
 
 /**

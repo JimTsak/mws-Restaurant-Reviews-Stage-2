@@ -1,16 +1,15 @@
-var CACHE_NAME = 'cache-v2';
+var cacheName = 'cache-v1';
 var urlsToCache = [
   '/',
-  'css/styles.css',
+  '/css/styles.css',
   '/img',
-  '/data/restaurants.json',
   '/js'
 ];
 
 self.addEventListener('install', function(event) {
   // Perform install steps
   event.waitUntil(
-    caches.open(CACHE_NAME)
+    caches.open(cacheName)
       .then(function(cache) {
         console.log('Opened cache');
         return cache.addAll(urlsToCache);
@@ -18,22 +17,30 @@ self.addEventListener('install', function(event) {
   );
 });
 
+
 self.addEventListener('activate', function (event) {
   event.waitUntil(
-      caches.keys().then(function(keys){
-          return Promise.all(keys.map(function(key, i){
-              if(key !== CACHE_VERSION){
-                  return caches.delete(keys[i]);
+     // Get all the cache keys (cacheName)
+      caches.keys().then(function(cacheNames){
+          console.log('activate cache');
+          return Promise.all(cacheNames.map(function(thisCacheName){
+            // If a cached item is saved under a previous cacheName
+              if(thisCacheName !== cacheName){
+                // Delete that cached file
+                 console.log('ServiceWorker - Removing Cached Files from Cache - ', thisCacheName);
+                  return caches.delete(thisCacheName);
               }
           }));
       })
   );
 });
 
+
 self.addEventListener('fetch', function(event) {
   event.respondWith(
     caches.match(event.request)
       .then(function(response) {
+
         // Cache hit - return response
         if (response) {
           return response;
@@ -58,7 +65,7 @@ self.addEventListener('fetch', function(event) {
             // to clone it so we have two streams.
             var responseToCache = response.clone();
 
-            caches.open(CACHE_NAME)
+            caches.open(cacheName)
               .then(function(cache) {
                 cache.put(event.request, responseToCache);
               });

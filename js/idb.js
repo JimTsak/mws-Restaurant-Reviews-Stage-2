@@ -1,4 +1,4 @@
-import idb from 'idb';
+//import idb from 'idb';
 //importScripts('node_modules/idb/lib/idb.js');
 
 console.log("inside my idb.js");
