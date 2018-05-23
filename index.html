@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-
-
 <html lang="en">
 
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#3367D6"/>
+  <!-- Startup configuration -->
+  <link rel="manifest" href="manifest.webmanifest">
   <link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
   <link rel="stylesheet" href="css/styles.css">
   <title>Restaurant Reviews</title>
@@ -12,7 +13,7 @@
 
 <body>
 
-  <div id = "container"> 
+  <div id = "container">
     <header>
     <nav>
       <h1><a href="/">Restaurant Reviews</a></h1>
@@ -26,18 +27,18 @@
     <section>
       <div class="filter-options">
         <h2>Filter Results</h2>
-        <select id="neighborhoods-select" name="neighborhoods" onchange="updateRestaurants()">
-          <option value="all">All Neighborhoods</option>
-        </select>
-        <select id="cuisines-select" name="cuisines" onchange="updateRestaurants()">
-          <option value="all">All Cuisines</option>
-        </select>
+          <select id="neighborhoods-select" name="neighborhoods" onchange="updateRestaurants()" aria-label="Select a Neighborhood">
+            <option value="all">All Neighborhoods</option>
+          </select>
+          <select id="cuisines-select" name="cuisines" onchange="updateRestaurants()" aria-label="Select a Cuisine">
+            <option value="all">All Cuisines</option>
+          </select>
       </div>
       <ul id="restaurants-list"></ul>
     </section>
   </main>
 
-  
+
 
   <footer id="footer">
     Copyright (c) 2017 <a href="/"><strong>Restaurant Reviews</strong></a> All Rights Reserved.
